@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:NewDawn.ViewModels"
+             x:Class="NewDawn.Views.CommunicationBoardPage"
+             x:DataType="viewmodels:CommunicationBoardViewModel"
+             Title="Communication Board">
+
+    <Grid RowDefinitions="Auto,*" Padding="20">
+        
+        <!-- Status Section -->
+        <Border 
+            Grid.Row="0"
+            Padding="20"
+            BackgroundColor="{StaticResource Primary}"
+            Margin="0,0,0,20">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10"/>
+            </Border.StrokeShape>
+            <VerticalStackLayout Spacing="10">
+                <Label 
+                    Text="Eye-Tracking Friendly Communication Board"
+                    Style="{StaticResource Headline}"
+                    FontSize="24"
+                    TextColor="White"
+                    HorizontalOptions="Center" />
+                <Label 
+                    Text="{Binding StatusMessage}"
+                    FontSize="16"
+                    TextColor="White"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Communication Board Grid -->
+        <Grid 
+            Grid.Row="1"
+            RowDefinitions="*,*,*"
+            ColumnDefinitions="*,*,*"
+            RowSpacing="15"
+            ColumnSpacing="15">
+
+            <!-- Response Buttons with Eye-Tracking Friendly Design -->
+            <CollectionView 
+                ItemsSource="{Binding Candidates}"
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Grid.Column="0"
+                Grid.ColumnSpan="3">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout 
+                        Orientation="Vertical"
+                        Span="3"
+                        HorizontalItemSpacing="15"
+                        VerticalItemSpacing="15" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border 
+                            Padding="0"
+                            BackgroundColor="{StaticResource Gray100}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="15"/>
+                            </Border.StrokeShape>
+                            <Button 
+                                Text="{Binding Text}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:CommunicationBoardViewModel}}, Path=SelectResponseCommand}"
+                                CommandParameter="{Binding .}"
+                                BackgroundColor="{StaticResource Primary}"
+                                TextColor="White"
+                                FontSize="22"
+                                FontAttributes="Bold"
+                                MinimumHeightRequest="150"
+                                CornerRadius="15"
+                                Padding="15">
+                                <Button.Triggers>
+                                    <DataTrigger 
+                                        TargetType="Button"
+                                        Binding="{Binding IsSelected}"
+                                        Value="True">
+                                        <Setter Property="BackgroundColor" Value="{StaticResource Success}" />
+                                        <Setter Property="BorderColor" Value="{StaticResource Tertiary}" />
+                                        <Setter Property="BorderWidth" Value="4" />
+                                    </DataTrigger>
+                                    <DataTrigger 
+                                        TargetType="Button"
+                                        Binding="{Binding Category}"
+                                        Value="Emergency">
+                                        <Setter Property="BackgroundColor" Value="#DC3545" />
+                                    </DataTrigger>
+                                    <DataTrigger 
+                                        TargetType="Button"
+                                        Binding="{Binding Category}"
+                                        Value="Affirmative">
+                                        <Setter Property="BackgroundColor" Value="#28A745" />
+                                    </DataTrigger>
+                                    <DataTrigger 
+                                        TargetType="Button"
+                                        Binding="{Binding Category}"
+                                        Value="Negative">
+                                        <Setter Property="BackgroundColor" Value="#FFC107" />
+                                        <Setter Property="TextColor" Value="Black" />
+                                    </DataTrigger>
+                                    <DataTrigger 
+                                        TargetType="Button"
+                                        Binding="{Binding Category}"
+                                        Value="Emotion">
+                                        <Setter Property="BackgroundColor" Value="#17A2B8" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </Grid>
+    </Grid>
+
+</ContentPage>
