@@ -7,19 +7,25 @@ namespace NewDawn.Services;
 /// </summary>
 public class ResponseGenerationService : IResponseGenerationService
 {
+    /// <summary>
+    /// Constructor for ResponseGenerationService
+    /// </summary>
     public ResponseGenerationService()
     {
         try
         {
             // Initialize any required resources
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in ResponseGenerationService constructor: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// ResponseGenerationService constructor
 
+    /// <summary>
+    /// Generates response candidates based on intent
+    /// </summary>
     public async Task<IEnumerable<ResponseCandidate>> GenerateResponsesAsync(Conversation conversation, string intent)
     {
         try
@@ -27,7 +33,7 @@ public class ResponseGenerationService : IResponseGenerationService
             if (conversation == null)
             {
                 throw new ArgumentNullException(nameof(conversation));
-            }
+            }// if conversation null
 
             return await Task.Run(() =>
             {
@@ -51,18 +57,21 @@ public class ResponseGenerationService : IResponseGenerationService
                     default:
                         responses.AddRange(GenerateGeneralResponses());
                         break;
-                }
+                }// switch intent
 
                 return responses;
             });
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in GenerateResponsesAsync: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// GenerateResponsesAsync
 
+    /// <summary>
+    /// Generates contextual response candidates
+    /// </summary>
     public async Task<IEnumerable<ResponseCandidate>> GenerateContextualResponsesAsync(string context, string intent)
     {
         try
@@ -85,31 +94,37 @@ public class ResponseGenerationService : IResponseGenerationService
                     default:
                         responses.AddRange(GenerateGeneralResponses());
                         break;
-                }
+                }// switch context
 
                 return responses;
             });
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in GenerateContextualResponsesAsync: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// GenerateContextualResponsesAsync
 
+    /// <summary>
+    /// Gets emergency response candidates
+    /// </summary>
     public async Task<IEnumerable<ResponseCandidate>> GetEmergencyResponsesAsync()
     {
         try
         {
             return await Task.FromResult(GetEmergencyResponsesSync());
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in GetEmergencyResponsesAsync: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// GetEmergencyResponsesAsync
 
+    /// <summary>
+    /// Generates responses for questions
+    /// </summary>
     private List<ResponseCandidate> GenerateQuestionResponses()
     {
         try
@@ -126,14 +141,17 @@ public class ResponseGenerationService : IResponseGenerationService
                 new ResponseCandidate("That sounds good", ResponseCategory.Affirmative, 0.8),
                 new ResponseCandidate("I'm not sure", ResponseCategory.Statement, 0.7)
             };
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in GenerateQuestionResponses: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// GenerateQuestionResponses
 
+    /// <summary>
+    /// Generates responses for greetings
+    /// </summary>
     private List<ResponseCandidate> GenerateGreetingResponses()
     {
         try
@@ -150,14 +168,17 @@ public class ResponseGenerationService : IResponseGenerationService
                 new ResponseCandidate("I'm okay", ResponseCategory.Statement, 0.8),
                 new ResponseCandidate("Good morning", ResponseCategory.Statement, 0.7)
             };
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in GenerateGreetingResponses: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// GenerateGreetingResponses
 
+    /// <summary>
+    /// Generates responses for requests
+    /// </summary>
     private List<ResponseCandidate> GenerateRequestResponses()
     {
         try
@@ -174,14 +195,17 @@ public class ResponseGenerationService : IResponseGenerationService
                 new ResponseCandidate("Can we do that later?", ResponseCategory.Question, 0.7),
                 new ResponseCandidate("Sounds good", ResponseCategory.Affirmative, 0.8)
             };
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in GenerateRequestResponses: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// GenerateRequestResponses
 
+    /// <summary>
+    /// Generates general responses
+    /// </summary>
     private List<ResponseCandidate> GenerateGeneralResponses()
     {
         try
@@ -198,14 +222,17 @@ public class ResponseGenerationService : IResponseGenerationService
                 new ResponseCandidate("I agree", ResponseCategory.Affirmative, 0.7),
                 new ResponseCandidate("Not really", ResponseCategory.Negative, 0.7)
             };
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in GenerateGeneralResponses: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// GenerateGeneralResponses
 
+    /// <summary>
+    /// Generates emotional responses
+    /// </summary>
     private List<ResponseCandidate> GenerateEmotionalResponses()
     {
         try
@@ -222,14 +249,17 @@ public class ResponseGenerationService : IResponseGenerationService
                 new ResponseCandidate("I'm not feeling well", ResponseCategory.Emotion, 0.8),
                 new ResponseCandidate("I'm uncomfortable", ResponseCategory.Emotion, 0.7)
             };
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in GenerateEmotionalResponses: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// GenerateEmotionalResponses
 
+    /// <summary>
+    /// Generates responses for needs
+    /// </summary>
     private List<ResponseCandidate> GenerateNeedsResponses()
     {
         try
@@ -246,14 +276,17 @@ public class ResponseGenerationService : IResponseGenerationService
                 new ResponseCandidate("I need to rest", ResponseCategory.Statement, 0.8),
                 new ResponseCandidate("I'm fine for now", ResponseCategory.Statement, 0.7)
             };
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in GenerateNeedsResponses: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// GenerateNeedsResponses
 
+    /// <summary>
+    /// Gets emergency responses synchronously
+    /// </summary>
     private List<ResponseCandidate> GetEmergencyResponsesSync()
     {
         try
@@ -270,11 +303,11 @@ public class ResponseGenerationService : IResponseGenerationService
                 new ResponseCandidate("SOMETHING IS WRONG", ResponseCategory.Emergency, 0.9),
                 new ResponseCandidate("URGENT ASSISTANCE NEEDED", ResponseCategory.Emergency, 0.95)
             };
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in GetEmergencyResponsesSync: {ex.Message}");
             throw;
-        }
-    }
-}
+        }// catch
+    }// GetEmergencyResponsesSync
+}// ResponseGenerationService class

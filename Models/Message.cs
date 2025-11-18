@@ -12,6 +12,9 @@ public class Message
     public string? Intent { get; set; }
     public double ConfidenceScore { get; set; }
 
+    /// <summary>
+    /// Default constructor for Message
+    /// </summary>
     public Message()
     {
         try
@@ -20,32 +23,35 @@ public class Message
             Timestamp = DateTime.UtcNow;
             Text = string.Empty;
             ConfidenceScore = 0.0;
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in Message constructor: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// Message constructor
 
+    /// <summary>
+    /// Constructor for Message with text and sender
+    /// </summary>
     public Message(string text, MessageSender sender) : this()
     {
         try
         {
             Text = text;
             Sender = sender;
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in Message constructor: {ex.Message}");
             throw;
-        }
-    }
-}
+        }// catch
+    }// Message constructor
+}// Message class
 
 public enum MessageSender
 {
     ConversationPartner,
     ALSUser,
     System
-}
+}// MessageSender enum
