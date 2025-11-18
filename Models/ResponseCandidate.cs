@@ -12,6 +12,9 @@ public class ResponseCandidate
     public int Priority { get; set; }
     public bool IsSelected { get; set; }
 
+    /// <summary>
+    /// Default constructor for ResponseCandidate
+    /// </summary>
     public ResponseCandidate()
     {
         try
@@ -21,14 +24,17 @@ public class ResponseCandidate
             ConfidenceScore = 0.0;
             Priority = 0;
             IsSelected = false;
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in ResponseCandidate constructor: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// ResponseCandidate constructor
 
+    /// <summary>
+    /// Constructor for ResponseCandidate with text, category, and confidence score
+    /// </summary>
     public ResponseCandidate(string text, ResponseCategory category, double confidenceScore) : this()
     {
         try
@@ -36,40 +42,46 @@ public class ResponseCandidate
             Text = text;
             Category = category;
             ConfidenceScore = confidenceScore;
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in ResponseCandidate constructor: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// ResponseCandidate constructor
 
+    /// <summary>
+    /// Marks this response candidate as selected
+    /// </summary>
     public void Select()
     {
         try
         {
             IsSelected = true;
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in Select: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// Select
 
+    /// <summary>
+    /// Marks this response candidate as not selected
+    /// </summary>
     public void Deselect()
     {
         try
         {
             IsSelected = false;
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in Deselect: {ex.Message}");
             throw;
-        }
-    }
-}
+        }// catch
+    }// Deselect
+}// ResponseCandidate class
 
 public enum ResponseCategory
 {
@@ -79,4 +91,4 @@ public enum ResponseCategory
     Statement,
     Emergency,
     Emotion
-}
+}// ResponseCategory enum

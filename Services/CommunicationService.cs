@@ -13,6 +13,9 @@ public class CommunicationService : ICommunicationService
 
     public Conversation? CurrentConversation => _currentConversation;
 
+    /// <summary>
+    /// Constructor for CommunicationService
+    /// </summary>
     public CommunicationService(
         IContextAnalysisService contextAnalysisService,
         IResponseGenerationService responseGenerationService)
@@ -21,14 +24,17 @@ public class CommunicationService : ICommunicationService
         {
             _contextAnalysisService = contextAnalysisService ?? throw new ArgumentNullException(nameof(contextAnalysisService));
             _responseGenerationService = responseGenerationService ?? throw new ArgumentNullException(nameof(responseGenerationService));
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in CommunicationService constructor: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// CommunicationService constructor
 
+    /// <summary>
+    /// Starts a new conversation
+    /// </summary>
     public async Task<Conversation> StartConversationAsync()
     {
         try
@@ -36,14 +42,17 @@ public class CommunicationService : ICommunicationService
             _currentConversation = new Conversation();
             await Task.CompletedTask;
             return _currentConversation;
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in StartConversationAsync: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// StartConversationAsync
 
+    /// <summary>
+    /// Processes transcribed speech and generates response candidates
+    /// </summary>
     public async Task<CommunicationBoard> ProcessSpeechAsync(string transcribedText, Conversation conversation)
     {
         try
@@ -51,12 +60,12 @@ public class CommunicationService : ICommunicationService
             if (string.IsNullOrWhiteSpace(transcribedText))
             {
                 throw new ArgumentException("Transcribed text cannot be empty", nameof(transcribedText));
-            }
+            }// if text empty
 
             if (conversation == null)
             {
                 throw new ArgumentNullException(nameof(conversation));
-            }
+            }// if conversation null
 
             // Create and add the message to the conversation
             var message = new Message(transcribedText, MessageSender.ConversationPartner);
@@ -92,14 +101,17 @@ public class CommunicationService : ICommunicationService
             board.UpdateCandidates(allResponses);
 
             return board;
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in ProcessSpeechAsync: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// ProcessSpeechAsync
 
+    /// <summary>
+    /// Handles selection of a response candidate
+    /// </summary>
     public async Task SelectResponseAsync(ResponseCandidate response, Conversation conversation)
     {
         try
@@ -107,12 +119,12 @@ public class CommunicationService : ICommunicationService
             if (response == null)
             {
                 throw new ArgumentNullException(nameof(response));
-            }
+            }// if response null
 
             if (conversation == null)
             {
                 throw new ArgumentNullException(nameof(conversation));
-            }
+            }// if conversation null
 
             // Mark response as selected
             response.Select();
@@ -126,14 +138,17 @@ public class CommunicationService : ICommunicationService
             conversation.AddMessage(message);
 
             await Task.CompletedTask;
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in SelectResponseAsync: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// SelectResponseAsync
 
+    /// <summary>
+    /// Ends the conversation
+    /// </summary>
     public async Task EndConversationAsync(Conversation conversation)
     {
         try
@@ -141,21 +156,21 @@ public class CommunicationService : ICommunicationService
             if (conversation == null)
             {
                 throw new ArgumentNullException(nameof(conversation));
-            }
+            }// if conversation null
 
             conversation.EndConversation();
 
             if (_currentConversation?.Id == conversation.Id)
             {
                 _currentConversation = null;
-            }
+            }// if current conversation matches
 
             await Task.CompletedTask;
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in EndConversationAsync: {ex.Message}");
             throw;
-        }
-    }
-}
+        }// catch
+    }// EndConversationAsync
+}// CommunicationService class

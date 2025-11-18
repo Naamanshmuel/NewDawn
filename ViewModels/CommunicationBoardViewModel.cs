@@ -30,13 +30,13 @@ public class CommunicationBoardViewModel : INotifyPropertyChanged
             {
                 _selectedResponse = value;
                 OnPropertyChanged();
-            }
+            }// try
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error in SelectedResponse setter: {ex.Message}");
-            }
-        }
-    }
+            }// catch
+        }// set
+    }// SelectedResponse
 
     public string StatusMessage
     {
@@ -47,16 +47,19 @@ public class CommunicationBoardViewModel : INotifyPropertyChanged
             {
                 _statusMessage = value;
                 OnPropertyChanged();
-            }
+            }// try
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error in StatusMessage setter: {ex.Message}");
-            }
-        }
-    }
+            }// catch
+        }// set
+    }// StatusMessage
 
     public ICommand SelectResponseCommand { get; }
 
+    /// <summary>
+    /// Constructor for CommunicationBoardViewModel
+    /// </summary>
     public CommunicationBoardViewModel(ICommunicationService communicationService)
     {
         try
@@ -67,14 +70,17 @@ public class CommunicationBoardViewModel : INotifyPropertyChanged
             _statusMessage = "Select a response";
 
             SelectResponseCommand = new Command<ResponseCandidate>(async (candidate) => await SelectResponseAsync(candidate));
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in CommunicationBoardViewModel constructor: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// CommunicationBoardViewModel constructor
 
+    /// <summary>
+    /// Loads the communication board
+    /// </summary>
     public async Task LoadBoardAsync(CommunicationBoard board)
     {
         try
@@ -82,7 +88,7 @@ public class CommunicationBoardViewModel : INotifyPropertyChanged
             if (board == null)
             {
                 throw new ArgumentNullException(nameof(board));
-            }
+            }// if board null
 
             _board = board;
             Candidates.Clear();
@@ -90,18 +96,21 @@ public class CommunicationBoardViewModel : INotifyPropertyChanged
             foreach (var candidate in board.Candidates)
             {
                 Candidates.Add(candidate);
-            }
+            }// foreach candidate
 
             StatusMessage = $"Loaded {Candidates.Count} response options";
             await Task.CompletedTask;
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in LoadBoardAsync: {ex.Message}");
             StatusMessage = $"Error loading board: {ex.Message}";
-        }
-    }
+        }// catch
+    }// LoadBoardAsync
 
+    /// <summary>
+    /// Selects a response candidate
+    /// </summary>
     private async Task SelectResponseAsync(ResponseCandidate candidate)
     {
         try
@@ -109,20 +118,20 @@ public class CommunicationBoardViewModel : INotifyPropertyChanged
             if (candidate == null)
             {
                 return;
-            }
+            }// if candidate null
 
             var conversation = _communicationService.CurrentConversation;
             if (conversation == null)
             {
                 StatusMessage = "No active conversation";
                 return;
-            }
+            }// if no conversation
 
             // Deselect all other candidates
             foreach (var c in Candidates)
             {
                 c.Deselect();
-            }
+            }// foreach candidate
 
             // Select this candidate
             candidate.Select();
@@ -131,23 +140,26 @@ public class CommunicationBoardViewModel : INotifyPropertyChanged
             await _communicationService.SelectResponseAsync(candidate, conversation);
             
             StatusMessage = $"Selected: {candidate.Text}";
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in SelectResponseAsync: {ex.Message}");
             StatusMessage = $"Error selecting response: {ex.Message}";
-        }
-    }
+        }// catch
+    }// SelectResponseAsync
 
+    /// <summary>
+    /// Raises property changed event
+    /// </summary>
     protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         try
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in OnPropertyChanged: {ex.Message}");
-        }
-    }
-}
+        }// catch
+    }// OnPropertyChanged
+}// CommunicationBoardViewModel class
