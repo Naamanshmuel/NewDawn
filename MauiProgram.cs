@@ -5,8 +5,14 @@ using NewDawn.Views;
 
 namespace NewDawn;
 
+/// <summary>
+/// MAUI program configuration
+/// </summary>
 public static class MauiProgram
 {
+    /// <summary>
+    /// Creates and configures the MAUI app
+    /// </summary>
     public static MauiApp CreateMauiApp()
     {
         try
@@ -39,11 +45,11 @@ public static class MauiProgram
 #endif
 
             return builder.Build();
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in CreateMauiApp: {ex.Message}");
             throw;
-        }
-    }
-}
+        }// catch
+    }// CreateMauiApp
+}// MauiProgram class

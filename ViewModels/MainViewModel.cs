@@ -32,13 +32,13 @@ public class MainViewModel : INotifyPropertyChanged
             {
                 _statusMessage = value;
                 OnPropertyChanged();
-            }
+            }// try
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error in StatusMessage setter: {ex.Message}");
-            }
-        }
-    }
+            }// catch
+        }// set
+    }// StatusMessage
 
     public bool IsListening
     {
@@ -49,13 +49,13 @@ public class MainViewModel : INotifyPropertyChanged
             {
                 _isListening = value;
                 OnPropertyChanged();
-            }
+            }// try
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error in IsListening setter: {ex.Message}");
-            }
-        }
-    }
+            }// catch
+        }// set
+    }// IsListening
 
     public string TranscribedText
     {
@@ -66,13 +66,13 @@ public class MainViewModel : INotifyPropertyChanged
             {
                 _transcribedText = value;
                 OnPropertyChanged();
-            }
+            }// try
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error in TranscribedText setter: {ex.Message}");
-            }
-        }
-    }
+            }// catch
+        }// set
+    }// TranscribedText
 
     public ICommand StartConversationCommand { get; }
     public ICommand StopConversationCommand { get; }
@@ -80,6 +80,9 @@ public class MainViewModel : INotifyPropertyChanged
     public ICommand StopListeningCommand { get; }
     public ICommand ProcessSpeechCommand { get; }
 
+    /// <summary>
+    /// Constructor for MainViewModel
+    /// </summary>
     public MainViewModel(
         ISpeechRecognitionService speechRecognitionService,
         ICommunicationService communicationService)
@@ -101,14 +104,17 @@ public class MainViewModel : INotifyPropertyChanged
             ProcessSpeechCommand = new Command(async () => await ProcessSpeechAsync());
 
             _speechRecognitionService.SpeechRecognized += OnSpeechRecognized;
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in MainViewModel constructor: {ex.Message}");
             throw;
-        }
-    }
+        }// catch
+    }// MainViewModel constructor
 
+    /// <summary>
+    /// Starts a new conversation
+    /// </summary>
     private async Task StartConversationAsync()
     {
         try
@@ -116,14 +122,17 @@ public class MainViewModel : INotifyPropertyChanged
             _currentConversation = await _communicationService.StartConversationAsync();
             StatusMessage = "Conversation started";
             Messages.Clear();
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in StartConversationAsync: {ex.Message}");
             StatusMessage = $"Error starting conversation: {ex.Message}";
-        }
-    }
+        }// catch
+    }// StartConversationAsync
 
+    /// <summary>
+    /// Stops the current conversation
+    /// </summary>
     private async Task StopConversationAsync()
     {
         try
@@ -133,15 +142,18 @@ public class MainViewModel : INotifyPropertyChanged
                 await _communicationService.EndConversationAsync(_currentConversation);
                 _currentConversation = null;
                 StatusMessage = "Conversation ended";
-            }
-        }
+            }// if conversation exists
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in StopConversationAsync: {ex.Message}");
             StatusMessage = $"Error stopping conversation: {ex.Message}";
-        }
-    }
+        }// catch
+    }// StopConversationAsync
 
+    /// <summary>
+    /// Starts listening for speech
+    /// </summary>
     private async Task StartListeningAsync()
     {
         try
@@ -149,14 +161,17 @@ public class MainViewModel : INotifyPropertyChanged
             await _speechRecognitionService.StartListeningAsync();
             IsListening = true;
             StatusMessage = "Listening...";
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in StartListeningAsync: {ex.Message}");
             StatusMessage = $"Error starting listening: {ex.Message}";
-        }
-    }
+        }// catch
+    }// StartListeningAsync
 
+    /// <summary>
+    /// Stops listening for speech
+    /// </summary>
     private async Task StopListeningAsync()
     {
         try
@@ -164,14 +179,17 @@ public class MainViewModel : INotifyPropertyChanged
             await _speechRecognitionService.StopListeningAsync();
             IsListening = false;
             StatusMessage = "Stopped listening";
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in StopListeningAsync: {ex.Message}");
             StatusMessage = $"Error stopping listening: {ex.Message}";
-        }
-    }
+        }// catch
+    }// StopListeningAsync
 
+    /// <summary>
+    /// Processes the transcribed speech
+    /// </summary>
     private async Task ProcessSpeechAsync()
     {
         try
@@ -180,13 +198,13 @@ public class MainViewModel : INotifyPropertyChanged
             {
                 StatusMessage = "Please start a conversation first";
                 return;
-            }
+            }// if no conversation
 
             if (string.IsNullOrWhiteSpace(TranscribedText))
             {
                 StatusMessage = "No speech to process";
                 return;
-            }
+            }// if no text
 
             StatusMessage = "Processing speech...";
             
@@ -197,42 +215,48 @@ public class MainViewModel : INotifyPropertyChanged
             foreach (var message in _currentConversation.Messages)
             {
                 Messages.Add(message);
-            }
+            }// foreach message
 
             StatusMessage = $"Generated {board.Candidates.Count} response candidates";
 
             // Navigate to communication board (would be implemented with navigation service)
             // For now, just update status
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in ProcessSpeechAsync: {ex.Message}");
             StatusMessage = $"Error processing speech: {ex.Message}";
-        }
-    }
+        }// catch
+    }// ProcessSpeechAsync
 
+    /// <summary>
+    /// Handles speech recognized event
+    /// </summary>
     private void OnSpeechRecognized(object? sender, string text)
     {
         try
         {
             TranscribedText = text;
             StatusMessage = $"Recognized: {text}";
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in OnSpeechRecognized: {ex.Message}");
-        }
-    }
+        }// catch
+    }// OnSpeechRecognized
 
+    /// <summary>
+    /// Raises property changed event
+    /// </summary>
     protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         try
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        }// try
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in OnPropertyChanged: {ex.Message}");
-        }
-    }
-}
+        }// catch
+    }// OnPropertyChanged
+}// MainViewModel class
